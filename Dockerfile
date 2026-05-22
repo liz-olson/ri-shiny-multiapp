@@ -16,25 +16,10 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     cmake \
   && rm -rf /var/lib/apt/lists/*
 
-# ── Install renv ───────────────────────────────────────────────
-RUN R -e "install.packages('renv', repos='https://cloud.r-project.org')"
-
-# ── Restore packages ───────────────────────────────────────────
-# Copy renv files first so Docker can cache this layer.
-# Packages only reinstall when renv.lock actually changes.
-WORKDIR /build
-COPY renv.lock  renv.lock
-COPY renv/      renv/
-COPY .Rprofile  .Rprofile
-
-# Install into the standard R site library so Shiny Server
-# finds packages without any .libPaths() configuration.
-ENV RENV_PATHS_LIBRARY=/usr/local/lib/R/site-library
-RUN R -e "renv::restore(prompt = FALSE)"
+# ── Install R packages ─────────────────────────────────────────
+RUN R -e "install.packages(c('shinyWidgets','plotly','bslib','dplyr','tidyr','stringr','scales'), repos='https://cloud.r-project.org')"
 
 # ── Deploy apps ────────────────────────────────────────────────
-# Clear rocker's default placeholder content, then copy your apps.
-# Each subfolder of apps/ becomes a route: domain.com/<foldername>/
 RUN rm -rf /srv/shiny-server/*
 COPY apps/ /srv/shiny-server/
 
