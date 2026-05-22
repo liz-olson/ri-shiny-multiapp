@@ -1,0 +1,8 @@
+.DS_Store
+renv/library/
+renv/staging/
+renv/python/
+.Rhistory
+.Rapp.history
+*.Rhistory
+rsconnect/
