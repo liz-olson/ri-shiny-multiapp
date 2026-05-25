@@ -1,0 +1,355 @@
+/* ============================================================
+   Roosevelt Institute — Shiny App Stylesheet
+   Extracted from State of the Labor Force (Shiny2)
+
+   Brand colors:
+     Green:       #58A618
+     Dark Green:  #2D5A0B
+     Light Green: #C4E2B7
+     Green 70%:   #8CCA79
+     Violet:      #4C12A1
+     Magenta:     #AA0061
+     Grey:        #5E6A71
+   ============================================================ */
+
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;600;700&display=swap');
+
+*, *::before, *::after { box-sizing: border-box; }
+
+body {
+  margin: 0;
+  background: #fff;
+  font-family: 'Montserrat', sans-serif;
+  color: #1A1A1A;
+}
+
+/* ── Header ─────────────────────────────────────────────────── */
+.ri-header {
+  background: #fff;
+  padding: 10px 20px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  border-bottom: 3px solid #58A618;
+}
+.ri-hd-text  { line-height: 1.25; }
+.ri-hd-title { font-size: 17px; font-weight: 700; color: #1A1A1A; }
+.ri-hd-sub   {
+  font-size: 8px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  color: #58A618;
+  margin-top: 1px;
+}
+
+/* ── Navigation wrapper ─────────────────────────────────────── */
+.nav-wrapper { background: #fff; }
+.nav-wrapper .tab-content {
+  background: transparent;
+  border: none;
+  padding: 16px 20px 28px;
+}
+
+/* ── Tab pills ──────────────────────────────────────────────── */
+.nav-pills {
+  display: flex !important;
+  gap: 6px !important;
+  align-items: center;
+  list-style: none;
+  margin: 0 !important;
+  padding: 8px 20px !important;
+  background: #fff;
+  border: none !important;
+  flex-shrink: 0;
+}
+.nav-pills > li > a {
+  font-family: 'Montserrat', sans-serif !important;
+  font-size: 10px !important;
+  font-weight: 700 !important;
+  letter-spacing: .5px !important;
+  text-transform: uppercase !important;
+  border-radius: 20px !important;
+  padding: 5px 14px !important;
+  border: 1.5px solid #58A618 !important;
+  color: #58A618 !important;
+  background: #fff !important;
+  text-decoration: none !important;
+  white-space: nowrap;
+  transition: all .15s;
+}
+.nav-pills > li > a:hover {
+  background: #f0fae8 !important;
+  color: #2D5A0B !important;
+  border-color: #2D5A0B !important;
+}
+.nav-pills > li.active > a,
+.nav-pills > li.active > a:focus,
+.nav-pills > li.active > a:hover {
+  background: #58A618 !important;
+  color: #fff !important;
+  border-color: #58A618 !important;
+}
+/* When JS moves pills into header, remove nav-wrapper padding */
+.ri-header .nav-pills { padding: 0 !important; }
+
+/* ── Stat strip ─────────────────────────────────────────────── */
+.stat-strip {
+  display: flex;
+  gap: 0;
+  margin-bottom: 18px;
+  border-bottom: 1px solid #EBEBEB;
+  padding-bottom: 14px;
+  flex-wrap: wrap;
+}
+.stat-card {
+  flex: 1;
+  min-width: 90px;
+  padding: 4px 16px 4px 0;
+  border-right: 1px solid #EBEBEB;
+  margin-right: 16px;
+}
+.stat-card:last-child { border-right: none; margin-right: 0; }
+.stat-num {
+  font-size: 26px;
+  font-weight: 700;
+  line-height: 1;
+  color: #58A618;
+}
+.stat-lbl {
+  font-size: 8px;
+  text-transform: uppercase;
+  letter-spacing: .6px;
+  color: #5E6A71;
+  font-weight: 600;
+  margin-top: 3px;
+}
+
+/* ── Chart cards ─────────────────────────────────────────────── */
+.ch-card {
+  background: #fff;
+  border: 1px solid #EBEBEB;
+  border-radius: 4px;
+  padding: 14px 16px 10px;
+  margin-bottom: 12px;
+  display: flex;
+  flex-direction: column;
+}
+.ch-card h3 {
+  margin: 0 0 2px;
+  font-size: 11px;
+  font-weight: 700;
+  color: #1A1A1A;
+  border-bottom: none;
+  padding-bottom: 0;
+  text-transform: uppercase;
+  letter-spacing: .8px;
+}
+.ch-card .sublabel {
+  font-size: 9px;
+  color: #5E6A71;
+  margin-bottom: 8px;
+}
+/* Plotly fills its card */
+.ch-card .plotly { flex: 1 1 auto; }
+.ch-card .js-plotly-plot { height: 100% !important; }
+
+/* bslib column gaps */
+.bslib-grid { gap: 12px !important; }
+.bslib-grid > .bslib-grid-item { display: flex; flex-direction: column; }
+.bslib-grid > .bslib-grid-item > .ch-card { flex: 1; }
+
+/* ── Legend row ──────────────────────────────────────────────── */
+.legend-row {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+  flex-wrap: wrap;
+  font-size: 9px;
+  color: #5E6A71;
+  margin-bottom: 8px;
+}
+
+/* ── Prominent selector (e.g. sector/industry picker) ─────────── */
+.ind-selector {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  gap: 10px;
+  margin-bottom: 16px;
+}
+.sector-label {
+  font-size: 10px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  color: #5E6A71;
+  white-space: nowrap;
+}
+.ind-selector .selectize-input {
+  font-family: 'Montserrat', sans-serif !important;
+  border-radius: 24px !important;
+  border: 2px solid #58A618 !important;
+  font-size: 13px !important;
+  font-weight: 700 !important;
+  padding: 7px 18px !important;
+  box-shadow: none !important;
+  color: #58A618 !important;
+}
+.ind-selector .selectize-input .item { color: #58A618 !important; }
+.ind-selector .selectize-input.focus {
+  border-color: #2D5A0B !important;
+  box-shadow: none !important;
+}
+.ind-selector .form-group { margin-bottom: 0; }
+
+/* ── Filter sidebar ──────────────────────────────────────────── */
+.explore-wrap { display: flex; gap: 20px; align-items: flex-start; }
+.explore-sidebar {
+  width: 200px;
+  flex-shrink: 0;
+  font-family: 'Montserrat', sans-serif;
+}
+.explore-sidebar .filter-label {
+  font-size: 9px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: .8px;
+  color: #1A1A1A;
+  border-bottom: 1.5px solid #58A618;
+  padding-bottom: 3px;
+  margin-top: 16px;
+  margin-bottom: 8px;
+}
+.explore-sidebar .filter-label:first-child { margin-top: 0; }
+.explore-sidebar .form-group { margin-bottom: 4px; }
+.explore-sidebar .checkbox label,
+.explore-sidebar .checkbox-inline label {
+  font-size: 10px !important;
+  font-family: 'Montserrat', sans-serif !important;
+}
+.explore-sidebar input[type='text'] {
+  font-family: 'Montserrat', sans-serif !important;
+  font-size: 11px !important;
+  border-radius: 6px !important;
+  border: 1px solid #DDD !important;
+  width: 100% !important;
+  padding: 5px 10px !important;
+}
+.explore-sidebar .selectize-input {
+  font-size: 11px !important;
+  border-radius: 6px !important;
+}
+/* Range slider brand colors */
+.explore-sidebar .irs--shiny .irs-bar {
+  background: #58A618 !important;
+  border-color: #58A618 !important;
+}
+.explore-sidebar .irs--shiny .irs-handle { border-color: #58A618 !important; }
+.explore-sidebar .irs--shiny .irs-from,
+.explore-sidebar .irs--shiny .irs-to,
+.explore-sidebar .irs--shiny .irs-single {
+  background: #58A618 !important;
+  font-size: 9px !important;
+}
+
+/* ── Tooltip icon (?  button) ────────────────────────────────── */
+.tip-icon {
+  display: inline-block;
+  width: 12px; height: 12px;
+  border-radius: 50%;
+  background: #aaa;
+  color: #fff;
+  font-size: 8px; font-weight: 700;
+  text-align: center; line-height: 12px;
+  cursor: default;
+  margin-left: 4px;
+  vertical-align: middle;
+  position: relative;
+  text-transform: none;
+  letter-spacing: 0;
+}
+.tip-icon::after {
+  content: attr(data-tip);
+  position: absolute;
+  left: 16px; top: -4px;
+  background: #333; color: #fff;
+  padding: 6px 8px;
+  border-radius: 4px;
+  font-size: 9px; font-weight: 400;
+  width: 190px;
+  white-space: normal; line-height: 1.5;
+  display: none;
+  z-index: 9999;
+  font-family: 'Montserrat', sans-serif;
+  text-transform: none; letter-spacing: 0;
+  pointer-events: none;
+}
+.tip-icon:hover::after { display: block; }
+
+/* ── Data table (workforce composition style) ────────────────── */
+.ri-demo-tbl {
+  font-family: 'Montserrat', sans-serif;
+  font-size: 11px;
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 4px;
+}
+.ri-demo-tbl tbody tr td {
+  padding: 9px 8px;
+  color: #1A1A1A;
+  text-align: left;
+  border-bottom: 1px solid #F4F4F4;
+}
+.ri-demo-tbl tbody tr td:last-child { text-align: right; font-weight: 600; }
+.ri-demo-tbl tbody tr:hover td { background: #f0fae8 !important; cursor: default; }
+.ri-demo-tbl tbody tr.tbl-section-hdr td {
+  padding: 10px 8px 3px !important;
+  font-size: 9px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: .5px;
+  color: #1A1A1A !important;
+  background: #fff !important;
+  border-bottom: 1.5px solid #58A618 !important;
+  text-align: left;
+}
+
+/* ── Footer ──────────────────────────────────────────────────── */
+.ri-footer {
+  text-align: center;
+  padding: 10px;
+  font-size: 9px;
+  color: #5E6A71;
+  border-top: 1px solid #EBEBEB;
+  background: #fff;
+  margin-top: 4px;
+}
+
+/* ── Mobile (≤640px) ─────────────────────────────────────────── */
+@media (max-width: 640px) {
+  .ri-header {
+    flex-wrap: wrap;
+    padding-bottom: 8px;
+    gap: 0;
+  }
+  .ri-header > div:first-child {
+    flex: 0 0 100%;
+    margin-bottom: 4px;
+  }
+  .ri-header .nav-pills {
+    display: block !important;
+    width: 100% !important;
+    padding: 0 0 6px !important;
+  }
+  .ri-header .nav-pills > li {
+    display: block !important;
+    float: none !important;
+    margin-bottom: 4px !important;
+  }
+  .explore-wrap { flex-direction: column; }
+  .explore-sidebar { width: 100% !important; }
+  .bslib-grid { grid-auto-rows: auto !important; }
+  .bslib-grid > * { height: auto !important; min-height: 0 !important; }
+}
