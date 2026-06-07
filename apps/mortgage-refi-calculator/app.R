@@ -193,8 +193,7 @@ ui <- fluidPage(
         value = 6.125, min = 0, max = 25, step = 0.05),
 
       selectInput("new_term", "New Term",
-        choices  = c("10 years" = 10, "15 years" = 15,
-                     "20 years" = 20, "25 years" = 25, "30 years" = 30),
+        choices  = setNames(1:30, paste(1:30, "years")),
         selected = 30),
 
       numericInput("closing_costs", "Closing Costs ($)",
@@ -295,7 +294,7 @@ server <- function(input, output, session) {
              if (cv$savings >= 0) "Annual Savings" else "Annual Increase",
              ann_col),
         stat(fmt_dollar(abs(cv$net_savings)),
-             if (cv$net_savings >= 0) "Net Savings" else "Net Extra Cost",
+             if (cv$net_savings >= 0) "Total Savings" else "Total Extra Cost",
              tot_col)
       )
     )
@@ -331,13 +330,9 @@ server <- function(input, output, session) {
     sav_pos <- ifelse(sav >= 0, sav, NA)
     sav_neg <- ifelse(sav <= 0, sav, NA)
 
-    # Break-even rate (where savings cross zero)
-    be_rate <- tryCatch(
-      uniroot(function(r) monthly_pi(cv$bal, r, cv$new_term) - cv$cur_pi,
-              interval = c(0.001, 20))$root,
-      error = function(e) NA_real_
-    )
-    be_in_range <- !is.na(be_rate) && be_rate >= 0 && be_rate <= 10
+    # Current rate marker
+    cur_rate_sav     <- cv$cur_pi - monthly_pi(cv$bal, cv$cur_rate, cv$new_term)
+    cur_rate_in_range <- cv$cur_rate >= 0 && cv$cur_rate <= 10
 
     dot_y    <- cv$savings
     dot_col  <- if (dot_y >= 0) "#58A618" else "#AA0061"
@@ -369,12 +364,21 @@ server <- function(input, output, session) {
       font = list(size = 9, color = dot_col, family = RI_FONT_FAMILY)
     ))
 
-    if (be_in_range) {
+    if (cur_rate_in_range) {
+      shapes <- c(shapes, list(list(
+        type = "line",
+        x0 = cv$cur_rate, x1 = cv$cur_rate,
+        y0 = 0, y1 = cur_rate_sav,
+        xref = "x", yref = "y",
+        line = list(color = "#5E6A71", width = 1.5, dash = "dot")
+      )))
       anns <- c(anns, list(list(
-        x = be_rate, y = 0, xref = "x", yref = "y",
-        text = paste0("Break-even: <b>", round(be_rate, 2), "%</b>"),
-        xanchor = "left", yanchor = "bottom",
-        xshift = 0, yshift = 8,
+        x = cv$cur_rate, y = cur_rate_sav, xref = "x", yref = "y",
+        text = paste0("Current rate: <b>", cv$cur_rate, "%</b>"),
+        xanchor = if (cv$cur_rate > 7) "right" else "left",
+        yanchor = "middle",
+        xshift  = if (cv$cur_rate > 7) -12 else 12,
+        yshift  = 0,
         showarrow = FALSE,
         font = list(size = 9, color = "#5E6A71", family = RI_FONT_FAMILY)
       )))
@@ -413,12 +417,12 @@ server <- function(input, output, session) {
         showlegend = FALSE, hoverinfo = "none"
       )
 
-    # Black dot at break-even
-    if (be_in_range) {
+    # Grey dot at current rate
+    if (cur_rate_in_range) {
       p <- p %>% add_trace(
-        x = be_rate, y = 0,
+        x = cv$cur_rate, y = cur_rate_sav,
         type = "scatter", mode = "markers",
-        marker = list(color = "#1A1A1A", size = 8),
+        marker = list(color = "#5E6A71", size = 8),
         showlegend = FALSE, hoverinfo = "none"
       )
     }
