@@ -177,17 +177,21 @@ ui <- fluidPage(
 
       div(class = "filter-label", "Current Mortgage"),
 
-      numericInput("cur_balance", "Remaining Balance ($)",
+      numericInput("orig_loan", "Original Loan Amount ($)",
         value = 199000, min = 1000, step = 5000),
 
-      numericInput("cur_rate", "Current Rate (%)",
+      selectInput("orig_term", "Original Term",
+        choices  = setNames(1:30, paste(1:30, "years")),
+        selected = 30),
+
+      numericInput("orig_year", "Origination Year",
+        value = 2026, min = 1990,
+        max = as.integer(format(Sys.Date(), "%Y")), step = 1),
+
+      numericInput("cur_rate", "Mortgage Rate (%)",
         value = 6.875, min = 0, max = 25, step = 0.05),
 
-      selectInput("yrs_rem", "Years Remaining",
-        choices  = setNames(1:30, paste(1:30, "years")),
-        selected = 28),
-
-      div(class = "filter-label", "Refinance To"),
+      div(class = "filter-label", "Refinance Terms"),
 
       numericInput("new_rate", "New Rate (%)",
         value = 6.125, min = 0, max = 25, step = 0.05),
@@ -223,25 +227,42 @@ ui <- fluidPage(
 server <- function(input, output, session) {
 
   calc <- reactive({
-    req(isTruthy(input$cur_balance), isTruthy(input$cur_rate),
+    req(isTruthy(input$orig_loan), isTruthy(input$orig_term),
+        isTruthy(input$orig_year), isTruthy(input$cur_rate),
         isTruthy(input$new_rate), isTruthy(input$closing_costs),
-        isTruthy(input$yrs_rem), isTruthy(input$new_term))
+        isTruthy(input$new_term))
 
-    bal      <- max(input$cur_balance, 1)
-    cur_rate <- max(input$cur_rate, 0)
-    yrs_rem  <- as.numeric(input$yrs_rem)
-    new_rate <- max(input$new_rate, 0)
-    new_term <- as.numeric(input$new_term)
-    closing  <- max(input$closing_costs, 0)
+    orig_loan <- max(input$orig_loan, 1)
+    orig_term <- as.numeric(input$orig_term)
+    cur_rate  <- max(input$cur_rate, 0)
+    new_rate  <- max(input$new_rate, 0)
+    new_term  <- as.numeric(input$new_term)
+    closing   <- max(input$closing_costs, 0)
 
-    cur_pi  <- monthly_pi(bal, cur_rate, yrs_rem)
+    # Payments assumed to begin January of origination year
+    today          <- Sys.Date()
+    months_elapsed <- (as.integer(format(today, "%Y")) - as.integer(input$orig_year)) * 12L +
+                      (as.integer(format(today, "%m")) - 1L)
+    months_elapsed <- max(0L, min(months_elapsed, as.integer(orig_term * 12)))
+    months_rem     <- as.integer(orig_term * 12) - months_elapsed
+
+    cur_pi <- monthly_pi(orig_loan, cur_rate, orig_term)
+
+    # Remaining balance via standard amortization formula
+    r_cur <- cur_rate / 100 / 12
+    bal   <- if (r_cur == 0) {
+      max(orig_loan - cur_pi * months_elapsed, 0)
+    } else {
+      max(orig_loan * (1 + r_cur)^months_elapsed -
+          cur_pi * ((1 + r_cur)^months_elapsed - 1) / r_cur, 0)
+    }
+
     new_pi  <- monthly_pi(bal, new_rate, new_term)
     savings <- cur_pi - new_pi
 
     be_months <- if (savings > 0) closing / savings else Inf
 
-    r_cur  <- cur_rate / 100 / 12
-    df_cur <- amort_by_year(bal, r_cur, yrs_rem * 12, cur_pi)
+    df_cur <- amort_by_year(bal, r_cur, months_rem, cur_pi)
 
     r_new  <- new_rate / 100 / 12
     df_new <- amort_by_year(bal, r_new, new_term * 12, new_pi)
@@ -252,7 +273,9 @@ server <- function(input, output, session) {
     net_savings    <- interest_saved - closing
 
     list(
-      bal = bal, cur_rate = cur_rate, yrs_rem = yrs_rem,
+      orig_loan = orig_loan, orig_term = orig_term,
+      bal = bal, months_elapsed = months_elapsed,
+      cur_rate = cur_rate, months_rem = months_rem,
       new_rate = new_rate, new_term = new_term, closing = closing,
       cur_pi = cur_pi, new_pi = new_pi, savings = savings,
       be_months = be_months,
@@ -309,10 +332,10 @@ server <- function(input, output, session) {
     } else if (!is.finite(cv$be_months)) {
       tagList(tags$b("Closing costs not recovered: "),
         "Your monthly savings are too small to offset closing costs.")
-    } else if (cv$be_months > cv$yrs_rem * 12) {
+    } else if (cv$be_months > cv$months_rem) {
       tagList(tags$b("Break-even after payoff: "),
         paste0("You'd break even in ", fmt_months(cv$be_months),
-               ", but only ", fmt_months(cv$yrs_rem * 12), " remain on your current loan."))
+               ", but only ", fmt_months(cv$months_rem), " remain on your current loan."))
     } else if (cv$net_savings < 0) {
       tagList(tags$b("More interest overall: "),
         "Extending the term means you'll pay more total interest even at the lower rate.")
@@ -374,7 +397,7 @@ server <- function(input, output, session) {
       )))
       anns <- c(anns, list(list(
         x = cv$cur_rate, y = cur_rate_sav, xref = "x", yref = "y",
-        text = paste0("Current rate: <b>", cv$cur_rate, "%</b>"),
+        text = paste0("Mortgage rate: <b>", cv$cur_rate, "%</b>"),
         xanchor = if (cv$cur_rate > 7) "right" else "left",
         yanchor = "middle",
         xshift  = if (cv$cur_rate > 7) -12 else 12,
