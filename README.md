@@ -97,4 +97,4 @@ This runs against `renv.lock`'s versions, not production's — see "Packages" ab
 | `mortgage-refi-calculator/` | Same structure as `mortgage-calculator/` |
 | `state-of-the-labor-force/` | Styles and helpers defined inline in `app.R`; reads `app_data.rds` |
 
-These apps predate the current `ri-shiny-template` and carry older copies of its helpers and CSS. Updating the template does **not** update apps already deployed here — each app keeps the copy it was built with until someone updates that app's files.
+These apps predate the current `ri-shiny-template` and carry older copies of its helpers and CSS. Updating the template does **not** update apps already deployed here — each app keeps the copy it was built with. They're being left as-is: they use Bootstrap 3 styling, so don't copy the current template's `roosevelt.css` or `R/` helpers into them. Template updates apply to new apps built from it.
