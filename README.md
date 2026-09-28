@@ -13,7 +13,8 @@ ri-shiny-multiapp/
 ├── apps/                          One folder per app — each folder is served at /<folder>/
 │   ├── mortgage-calculator/
 │   ├── mortgage-refi-calculator/
-│   └── state-of-the-labor-force/
+│   ├── state-of-the-labor-force/
+│   └── test-dashboard/            Template test app (every layout, chart type & UX feature) — sample data only
 ├── Dockerfile                     The production container: R + packages + apps/
 ├── renv.lock, renv/, .Rprofile    Local development environment only (not used by the Docker build — see "Packages")
 └── README.md

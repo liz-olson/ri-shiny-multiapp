@@ -1,0 +1,407 @@
+/* ============================================================
+   Roosevelt Institute — Shiny App Stylesheet
+   Extracted from State of the Labor Force (Shiny2)
+
+   Colors are defined once, as CSS variables in :root below, named
+   to match the R constants in R/components.R and R/plotting.R
+   (e.g. --ri-grey = ri_grey, --ri-grid-color = RI_GRID_COLOR).
+   If you change one, change its R twin too — use these variables
+   rather than new hex values elsewhere in this file.
+   ============================================================ */
+
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;600;700&display=swap');
+
+:root {
+  --ri-green:          #58A618;   /* ri_green */
+  --ri-dark-green:     #396C10;   /* ri_dark_green (35% shade) */
+  --ri-text:           #1A1A1A;   /* ri_text */
+  --ri-grey:           #5E6A71;   /* ri_grey — Roosevelt Grey */
+  --ri-light-grey:     #7B868C;   /* ri_light_grey — Roosevelt Light Grey */
+  --ri-lightest-grey:  #C7CCCF;   /* ri_lightest_grey — Roosevelt Grey 35% tint */
+  --ri-grid-color:     #EBEBEB;   /* RI_GRID_COLOR — gridlines, borders, dividers */
+}
+
+*, *::before, *::after { box-sizing: border-box; }
+
+body {
+  margin: 0;
+  background: #fff;
+  font-family: 'Montserrat', sans-serif;
+  color: var(--ri-text);
+}
+
+/* ── Header ─────────────────────────────────────────────────── */
+.ri-header {
+  background: #fff;
+  padding: 10px 20px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  border-bottom: 3px solid var(--ri-green);
+}
+.ri-hd-text  { line-height: 1.25; }
+.ri-hd-title { font-size: 17px; font-weight: 700; color: var(--ri-text); }
+.ri-hd-sub   {
+  font-size: 8px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  color: var(--ri-green);
+  margin-top: 1px;
+}
+
+/* ── Navigation wrapper ─────────────────────────────────────── */
+.nav-wrapper { background: #fff; }
+.nav-wrapper .tab-content {
+  background: transparent;
+  border: none;
+  padding: 16px 20px 28px;
+}
+
+/* ── Tab pills ──────────────────────────────────────────────── */
+.nav-pills {
+  display: flex !important;
+  gap: 6px !important;
+  align-items: center;
+  list-style: none;
+  margin: 0 !important;
+  padding: 8px 20px !important;
+  background: #fff;
+  border: none !important;
+  flex-shrink: 0;
+}
+/* All templates run Bootstrap 5 (bs_theme(version = 5)), which renders
+   <li class="nav-item"><a|button class="nav-link">...</a|button></li>
+   with .active on the link/button itself, not the <li>. */
+.nav-pills .nav-link {
+  font-family: 'Montserrat', sans-serif !important;
+  font-size: 10px !important;
+  font-weight: 700 !important;
+  letter-spacing: .5px !important;
+  text-transform: uppercase !important;
+  border-radius: 20px !important;
+  padding: 5px 14px !important;
+  border: 1.5px solid var(--ri-green) !important;
+  color: var(--ri-green) !important;
+  background: #fff !important;
+  text-decoration: none !important;
+  white-space: nowrap;
+  transition: all .15s;
+  appearance: none;
+  cursor: pointer;
+}
+.nav-pills .nav-link:hover {
+  background: #f0fae8 !important;
+  color: var(--ri-dark-green) !important;
+  border-color: var(--ri-dark-green) !important;
+}
+.nav-pills .nav-link:focus-visible {
+  outline: 2px solid var(--ri-dark-green);
+  outline-offset: 1px;
+}
+.nav-pills .nav-link.active,
+.nav-pills .nav-link.active:focus,
+.nav-pills .nav-link.active:hover {
+  background: var(--ri-green) !important;
+  color: #fff !important;
+  border-color: var(--ri-green) !important;
+}
+/* When JS moves pills into header, remove nav-wrapper padding */
+.ri-header .nav-pills { padding: 0 !important; }
+
+/* ── Stat strip ─────────────────────────────────────────────── */
+.stat-strip {
+  display: flex;
+  gap: 0;
+  margin-bottom: 18px;
+  border-bottom: 1px solid var(--ri-grid-color);
+  padding-bottom: 14px;
+  flex-wrap: wrap;
+}
+.stat-card {
+  flex: 1;
+  min-width: 90px;
+  padding: 4px 16px 4px 0;
+  border-right: 1px solid var(--ri-grid-color);
+  margin-right: 16px;
+}
+.stat-card:last-child { border-right: none; margin-right: 0; }
+.stat-num {
+  font-size: 26px;
+  font-weight: 700;
+  line-height: 1;
+  color: var(--ri-green);
+}
+.stat-lbl {
+  font-size: 8px;
+  text-transform: uppercase;
+  letter-spacing: .6px;
+  color: var(--ri-grey);
+  font-weight: 600;
+  margin-top: 3px;
+}
+
+/* ── Chart cards ─────────────────────────────────────────────── */
+.ch-card {
+  background: #fff;
+  border: 1px solid var(--ri-grid-color);
+  border-radius: 4px;
+  padding: 14px 16px 10px;
+  margin-bottom: 12px;
+  display: flex;
+  flex-direction: column;
+}
+.ch-card h3 {
+  margin: 0 0 2px;
+  font-size: 11px;
+  font-weight: 700;
+  color: var(--ri-text);
+  border-bottom: none;
+  padding-bottom: 0;
+  text-transform: uppercase;
+  letter-spacing: .8px;
+}
+.ch-card .sublabel {
+  font-size: 9px;
+  color: var(--ri-grey);
+  margin-bottom: 8px;
+}
+/* Plotly fills its card */
+.ch-card .plotly { flex: 1 1 auto; }
+.ch-card .js-plotly-plot { height: 100% !important; }
+
+/* bslib column gaps. Cards in the same grid row stretch to equal height.
+   Matches any grid child, not just .bslib-grid-item: layout_column_wrap()
+   wraps each child in a differently-classed div depending on the bslib
+   version (e.g. .bslib-gap-spacing), so a class-specific selector
+   silently stops matching. */
+.bslib-grid { gap: 12px !important; }
+.bslib-grid > * { display: flex; flex-direction: column; }
+.bslib-grid > * > .ch-card { flex: 1; }
+
+/* ── Legend row ──────────────────────────────────────────────── */
+.legend-row {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+  flex-wrap: wrap;
+  font-size: 9px;
+  color: var(--ri-grey);
+  margin-bottom: 8px;
+}
+
+/* ── Prominent selector (e.g. sector/industry picker) ─────────── */
+.ind-selector {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  gap: 10px;
+  margin-bottom: 16px;
+}
+.sector-label {
+  font-size: 10px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  color: var(--ri-grey);
+  white-space: nowrap;
+}
+.ind-selector .selectize-input {
+  font-family: 'Montserrat', sans-serif !important;
+  border-radius: 24px !important;
+  border: 2px solid var(--ri-green) !important;
+  font-size: 13px !important;
+  font-weight: 700 !important;
+  padding: 7px 18px !important;
+  box-shadow: none !important;
+  color: var(--ri-green) !important;
+}
+.ind-selector .selectize-input .item { color: var(--ri-green) !important; }
+.ind-selector .selectize-input.focus {
+  border-color: var(--ri-dark-green) !important;
+  box-shadow: none !important;
+}
+.ind-selector .form-group { margin-bottom: 0; }
+
+/* ── Filter sidebar ──────────────────────────────────────────── */
+.explore-wrap { display: flex; gap: 20px; align-items: flex-start; }
+.explore-sidebar {
+  width: 200px;
+  flex-shrink: 0;
+  font-family: 'Montserrat', sans-serif;
+}
+.explore-sidebar .filter-label {
+  font-size: 9px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: .8px;
+  color: var(--ri-text);
+  border-bottom: 1.5px solid var(--ri-green);
+  padding-bottom: 3px;
+  margin-top: 16px;
+  margin-bottom: 8px;
+}
+.explore-sidebar .filter-label:first-child { margin-top: 0; }
+.explore-sidebar .form-group { margin-bottom: 4px; }
+.explore-sidebar .checkbox label,
+.explore-sidebar .checkbox-inline label,
+.explore-sidebar .radio label,
+.explore-sidebar .radio-inline label {
+  font-size: 10px !important;
+  font-family: 'Montserrat', sans-serif !important;
+}
+.explore-sidebar input[type='text'] {
+  font-family: 'Montserrat', sans-serif !important;
+  font-size: 11px !important;
+  border-radius: 6px !important;
+  border: 1px solid var(--ri-lightest-grey) !important;
+  width: 100% !important;
+  padding: 5px 10px !important;
+}
+/* The rule above is meant for real standalone text inputs (e.g. the search
+   box), but input[type='text'] also matches selectize's internal, normally
+   invisible, dynamically-sized typeahead input — forcing it to full width
+   with a visible border wraps the selected-value chip onto its own line
+   above it. Restore selectize's own sizing/borderless look for that case. */
+.explore-sidebar .selectize-input input[type='text'] {
+  width: auto !important;
+  min-width: 4px !important;
+  border: none !important;
+  padding: 0 !important;
+  border-radius: 0 !important;
+}
+.explore-sidebar .selectize-input {
+  font-size: 11px !important;
+  border-radius: 6px !important;
+}
+/* The closed input above is styled, but selectize renders its open
+   dropdown list as a separate element — without this it falls back to
+   the browser/Bootstrap default size, much bigger than the input. */
+.explore-sidebar .selectize-dropdown-content .option,
+.explore-sidebar .selectize-dropdown .optgroup-header {
+  font-size: 11px !important;
+  font-family: 'Montserrat', sans-serif !important;
+}
+/* Range slider brand colors */
+.explore-sidebar .irs--shiny .irs-bar {
+  background: var(--ri-green) !important;
+  border-color: var(--ri-green) !important;
+}
+.explore-sidebar .irs--shiny .irs-handle { border-color: var(--ri-green) !important; }
+.explore-sidebar .irs--shiny .irs-from,
+.explore-sidebar .irs--shiny .irs-to,
+.explore-sidebar .irs--shiny .irs-single {
+  background: #fff !important;
+  border: 1.5px solid var(--ri-green) !important;
+  color: var(--ri-text) !important;
+  font-weight: 700 !important;
+  font-size: 9px !important;
+}
+/* ionRangeSlider draws a small triangular pointer under each label,
+   colored via border-top — keep it matching the new white/green box. */
+.explore-sidebar .irs--shiny .irs-from::before,
+.explore-sidebar .irs--shiny .irs-to::before,
+.explore-sidebar .irs--shiny .irs-single::before {
+  border-top-color: var(--ri-green) !important;
+}
+
+/* ── Tooltip icon (?  button) ────────────────────────────────── */
+.tip-icon {
+  display: inline-block;
+  width: 12px; height: 12px;
+  border-radius: 50%;
+  background: var(--ri-light-grey);
+  color: #fff;
+  font-size: 8px; font-weight: 700;
+  text-align: center; line-height: 12px;
+  cursor: default;
+  margin-left: 4px;
+  vertical-align: middle;
+  position: relative;
+  text-transform: none;
+  letter-spacing: 0;
+}
+.tip-icon::after {
+  content: attr(data-tip);
+  position: absolute;
+  left: 16px; top: -4px;
+  background: var(--ri-text); color: #fff;
+  padding: 6px 8px;
+  border-radius: 4px;
+  font-size: 9px; font-weight: 400;
+  width: 190px;
+  white-space: normal; line-height: 1.5;
+  display: none;
+  z-index: 9999;
+  font-family: 'Montserrat', sans-serif;
+  text-transform: none; letter-spacing: 0;
+  pointer-events: none;
+}
+.tip-icon:hover::after { display: block; }
+
+/* ── Data table (workforce composition style) ────────────────── */
+.ri-demo-tbl {
+  font-family: 'Montserrat', sans-serif;
+  font-size: 11px;
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 4px;
+}
+.ri-demo-tbl tbody tr td {
+  padding: 9px 8px;
+  color: var(--ri-text);
+  text-align: left;
+  border-bottom: 1px solid var(--ri-grid-color);
+}
+.ri-demo-tbl tbody tr td:last-child { text-align: right; font-weight: 600; }
+.ri-demo-tbl tbody tr:hover td { background: #f0fae8 !important; cursor: default; }
+.ri-demo-tbl tbody tr.tbl-section-hdr td {
+  padding: 10px 8px 3px !important;
+  font-size: 9px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: .5px;
+  color: var(--ri-text) !important;
+  background: #fff !important;
+  border-bottom: 1.5px solid var(--ri-green) !important;
+  text-align: left;
+}
+
+/* ── Footer ──────────────────────────────────────────────────── */
+.ri-footer {
+  text-align: center;
+  padding: 10px;
+  font-size: 9px;
+  color: var(--ri-grey);
+  border-top: 1px solid var(--ri-grid-color);
+  background: #fff;
+  margin-top: 4px;
+}
+
+/* ── Mobile (≤640px) ─────────────────────────────────────────── */
+@media (max-width: 640px) {
+  .ri-header {
+    flex-wrap: wrap;
+    padding-bottom: 8px;
+    gap: 0;
+  }
+  .ri-header > div:first-child {
+    flex: 0 0 100%;
+    margin-bottom: 4px;
+  }
+  .ri-header .nav-pills {
+    display: block !important;
+    width: 100% !important;
+    padding: 0 0 6px !important;
+  }
+  .ri-header .nav-pills > li {
+    display: block !important;
+    float: none !important;
+    margin-bottom: 4px !important;
+  }
+  .explore-wrap { flex-direction: column; align-items: stretch; }   /* stretch so the chart fills the width when stacked */
+  .explore-sidebar { width: 100% !important; }
+  .bslib-grid { grid-auto-rows: auto !important; }
+  .bslib-grid > * { height: auto !important; min-height: 0 !important; }
+}
